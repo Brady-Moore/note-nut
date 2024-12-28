@@ -52,7 +52,7 @@ async function submit() {
 
   const response = await $fetch("/api/user", {
     method: "POST",
-    data: {
+    body: {
       email: email.value,
       password: password.value,
     },
