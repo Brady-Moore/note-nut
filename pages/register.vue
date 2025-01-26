@@ -43,6 +43,7 @@
 </template>
 
 <script setup>
+import Swal from "sweetalert2";
 const email = ref("");
 const password = ref("");
 
@@ -58,6 +59,12 @@ async function submit() {
   } catch (error) {
     console.log("ERROR:");
     console.log(error.response?._data?.message);
+    Swal.fire({
+      title: "Error!",
+      text: error.response?._data?.message,
+      icon: "error",
+      confirmButtonText: "OK",
+    });
   }
 }
 </script>
