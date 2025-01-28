@@ -1,7 +1,7 @@
 <template>
   <div class="flex bg-black h-screen">
     <!-- Side Bar -->
-    <div class="bg-zinc-900 w-[516px] p-10 flex flex-col justify-center">
+    <div class="bg-zinc-900 w-[500px] p-10 flex flex-col justify-center">
       <Logo />
       <h1 class="text-white font-bold text-lg mt-7">Sign up for free!</h1>
       <p class="text-zinc-300 text-sm">Have an account already? <span class="font-bold text-yellow-500 underline">Log in</span></p>
