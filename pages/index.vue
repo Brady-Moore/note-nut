@@ -9,17 +9,71 @@ definePageMeta({
     <!-- Side Bar -->
     <div class="bg-black w-[330px] p-7">
       <Logo />
-      <h1 class="text-white font-bold text-lg mt-7">Log in</h1>
-      <p class="text-zinc-300 text-sm">
-        Don't have an account yet?<nuxt-link
-          to="/register"
-          class="font-bold text-yellow-500 underline"
-          >Sign up</nuxt-link
-        >for an account
-      </p>
-      <!-- Notes Container -->
+      <!-- Today -->
+      <div>
+        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
+        <div class="pl-2">
+          <div class="p-2 bg-yellow-500 rounded-lg">
+            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
+            <div class="leading-none">
+              <span class="text-xs text-white mr-4">Today</span>
+              <span class="text-xs text-zinc-400">The Midnight Library...</span>
+            </div>
+          </div>
+        </div>
+        <div class="pl-2">
+          <div class="p-2">
+            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
+            <div class="leading-none">
+              <span class="text-xs text-white mr-4">Today</span>
+              <span class="text-xs text-zinc-400">The Midnight Library...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Yesterday -->
+      <div>
+        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
+        <div class="pl-2">
+          <div class="p-2 bg-yellow-500 rounded-lg">
+            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
+            <div class="leading-none">
+              <span class="text-xs text-white mr-4">Today</span>
+              <span class="text-xs text-zinc-400">The Midnight Library...</span>
+            </div>
+          </div>
+        </div>
+        <div class="pl-2">
+          <div class="p-2">
+            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
+            <div class="leading-none">
+              <span class="text-xs text-white mr-4">Today</span>
+              <span class="text-xs text-zinc-400">The Midnight Library...</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- Note Demo -->
-    <div></div>
+    <!-- Notes Container -->
+    <div class="w-full">
+      <div class="flex justify-between w-full items-start p-8">
+        <button class="inline-flex items-center text-xs text-zinc-300 hover:text-white font-bold space-x-2"><span>Icon</span><span>New Note</span></button>
+        <button>
+          <span class="text-zinc-300 hover:text-white">Trash Icon</span>
+        </button>
+      </div>
+      <div class="max-w-[450px] mx-auto">
+        <p class="text-zinc-300">February 23rd, 2089</p>
+        <p class="text-zinc-100 my-3">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci debitis quas sit rem dolore tenetur pariatur cupiditate corporis blanditiis
+          architecto, iure quod alias provident soluta maxime! Voluptatibus incidunt corrupti corporis?
+        </p>
+        <p class="text-zinc-100 my-3">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci debitis quas sit rem dolore tenetur pariatur cupiditate corporis blanditiis
+          architecto, iure quod alias provident soluta maxime! Voluptatibus incidunt corrupti corporis?
+        </p>
+      </div>
+    </div>
   </div>
 </template>
