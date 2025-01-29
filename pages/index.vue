@@ -42,6 +42,26 @@
           </div>
         </div>
       </div>
+
+      <!-- Past Yesterday -->
+      <div>
+        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
+        <div class="pl-2 space-y-2">
+          <div
+            v-for="note in pastNotes"
+            class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
+            :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
+            @click="selectedNote = note">
+            <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
+            <div class="leading-none truncate text-zinc-400">
+              <span class="text-xs text-white mr-4">{{
+                new Date(note.updatedAt).toDateString() === new Date().toDateString() ? "Today" : new Date(note.updatedAt).toLocaleDateString()
+              }}</span>
+              <span class="text-xs text-zinc-400">... {{ note.text.substring(50, 90) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Notes Container -->
     <div class="w-full">
@@ -85,6 +105,16 @@ const yesterdaysNotes = computed(() => {
   return notes.value.filter((note) => {
     const noteDate = new Date(note.updatedAt);
     return noteDate.toDateString() === yesterday.toDateString();
+  });
+});
+
+const pastNotes = computed(() => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  return notes.value.filter((note) => {
+    const noteDate = new Date(note.updatedAt);
+    return noteDate < yesterday && noteDate.toDateString() !== yesterday.toDateString();
   });
 });
 
