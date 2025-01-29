@@ -8,7 +8,7 @@
         <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
         <div class="pl-2 space-y-2">
           <div
-            v-for="note in notes"
+            v-for="note in todaysNotes"
             class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
             :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
             @click="selectedNote = note">
@@ -21,35 +21,23 @@
             </div>
           </div>
         </div>
-        <div class="pl-2">
-          <div class="p-2">
-            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
-            <div class="leading-none">
-              <span class="text-xs text-white mr-4">Today</span>
-              <span class="text-xs text-zinc-400">The Midnight Library...</span>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Yesterday -->
       <div>
         <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
-        <div class="pl-2">
-          <div class="p-2 bg-yellow-500 rounded-lg">
-            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
-            <div class="leading-none">
-              <span class="text-xs text-white mr-4">Today</span>
-              <span class="text-xs text-zinc-400">The Midnight Library...</span>
-            </div>
-          </div>
-        </div>
-        <div class="pl-2">
-          <div class="p-2">
-            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
-            <div class="leading-none">
-              <span class="text-xs text-white mr-4">Today</span>
-              <span class="text-xs text-zinc-400">The Midnight Library...</span>
+        <div class="pl-2 space-y-2">
+          <div
+            v-for="note in yesterdaysNotes"
+            class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
+            :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
+            @click="selectedNote = note">
+            <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
+            <div class="leading-none truncate text-zinc-400">
+              <span class="text-xs text-white mr-4">{{
+                new Date(note.updatedAt).toDateString() === new Date().toDateString() ? "Today" : new Date(note.updatedAt).toLocaleDateString()
+              }}</span>
+              <span class="text-xs text-zinc-400">... {{ note.text.substring(50, 90) }}</span>
             </div>
           </div>
         </div>
@@ -88,6 +76,15 @@ const todaysNotes = computed(() => {
   return notes.value.filter((note) => {
     const noteDate = new Date(note.updatedAt);
     return noteDate.toDateString() === new Date().toDateString();
+  });
+});
+const yesterdaysNotes = computed(() => {
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  return notes.value.filter((note) => {
+    const noteDate = new Date(note.updatedAt);
+    return noteDate.toDateString() === yesterday.toDateString();
   });
 });
 
