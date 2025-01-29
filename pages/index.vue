@@ -1,9 +1,3 @@
-<script setup>
-definePageMeta({
-  middleware: ["auth"],
-});
-</script>
-
 <template>
   <div class="flex bg-zinc-900 h-screen">
     <!-- Side Bar -->
@@ -13,11 +7,15 @@ definePageMeta({
       <div>
         <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
         <div class="pl-2">
-          <div class="p-2 bg-yellow-500 rounded-lg">
-            <h3 class="text-sm font-bold text-white">Just finished reading...</h3>
-            <div class="leading-none">
-              <span class="text-xs text-white mr-4">Today</span>
-              <span class="text-xs text-zinc-400">The Midnight Library...</span>
+          <div
+            v-for="note in notes"
+            class="p-2 bg-yellow-500 rounded-lg">
+            <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
+            <div class="leading-none truncate text-zinc-400">
+              <span class="text-xs text-white mr-4">{{
+                new Date(note.updatedAt).toDateString() === new Date().toDateString() ? "Today" : new Date(note.updatedAt).toLocaleDateString()
+              }}</span>
+              <span class="text-xs text-zinc-400">... {{ note.text.substring(50, 90) }}</span>
             </div>
           </div>
         </div>
@@ -77,3 +75,14 @@ definePageMeta({
     </div>
   </div>
 </template>
+
+<script setup>
+const notes = ref([]);
+definePageMeta({
+  middleware: ["auth"],
+});
+
+onMounted(async () => {
+  notes.value = await $fetch("/api/notes");
+});
+</script>
