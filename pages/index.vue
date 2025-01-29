@@ -25,7 +25,7 @@
 
       <!-- Yesterday -->
       <div>
-        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
+        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Yesterday</p>
         <div class="pl-2 space-y-2">
           <div
             v-for="note in yesterdaysNotes"
@@ -45,7 +45,7 @@
 
       <!-- Past Yesterday -->
       <div>
-        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
+        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Past</p>
         <div class="pl-2 space-y-2">
           <div
             v-for="note in pastNotes"
