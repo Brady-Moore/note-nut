@@ -73,12 +73,15 @@
       </div>
       <div class="max-w-[450px] mx-auto">
         <p class="text-zinc-300 font-playfair">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
+        <textarea
+          v-model="updatedNote"
+          name="note"
+          id="note"
+          class="text-zinc-100 bg-transparent w-full my-3 font-playfair focus:outline-none resize-none"
+          @input="updateNote"></textarea>
+
         <p class="text-zinc-100 my-3 font-playfair">
           {{ selectedNote.text }}
-        </p>
-        <p class="text-zinc-100 my-3 font-playfair">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci debitis quas sit rem dolore tenetur pariatur cupiditate corporis blanditiis
-          architecto, iure quod alias provident soluta maxime! Voluptatibus incidunt corrupti corporis?
         </p>
       </div>
     </div>
@@ -86,11 +89,25 @@
 </template>
 
 <script setup>
+const updatedNote = ref("");
 const notes = ref([]);
 const selectedNote = ref({});
 definePageMeta({
   middleware: ["auth"],
 });
+
+async function updateNote() {
+  try {
+    await $fetch(`/api/notes/${selectedNote.value.id}`, {
+      method: "PATCH",
+      body: {
+        updatedNote: updatedNote.value,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const todaysNotes = computed(() => {
   return notes.value.filter((note) => {
@@ -123,6 +140,8 @@ onMounted(async () => {
 
   if (notes.value.length > 0) {
     selectedNote.value = notes.value[0];
+
+    updatedNote.value = selectedNote.value.text;
   }
 });
 </script>
