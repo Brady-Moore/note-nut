@@ -64,20 +64,20 @@
       </div>
     </div>
     <!-- Notes Container -->
-    <div class="w-full">
+    <div class="w-full flex flex-col">
       <div class="flex justify-between w-full items-start p-8">
         <button class="inline-flex items-center text-xs text-zinc-300 hover:text-white font-bold space-x-2"><span>Icon</span><span>New Note</span></button>
         <button>
           <span class="text-zinc-300 hover:text-white">Trash Icon</span>
         </button>
       </div>
-      <div class="max-w-[450px] mx-auto">
+      <div class="max-w-[450px] mx-auto w-full flex-grow">
         <p class="text-zinc-300 font-playfair">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
         <textarea
           v-model="updatedNote"
           name="note"
           id="note"
-          class="text-zinc-100 bg-transparent w-full my-3 font-playfair focus:outline-none resize-none"
+          class="text-zinc-100 bg-transparent w-full my-3 font-playfair focus:outline-none resize-none flex-grow"
           @input="updateNote"></textarea>
 
         <p class="text-zinc-100 my-3 font-playfair">
