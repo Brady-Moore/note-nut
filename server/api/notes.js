@@ -12,11 +12,13 @@ export default defineEventHandler(async (event) => {
     }
 
     const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
-    const user = await prisma.note.findMany({
+    const notes = await prisma.note.findMany({
       where: {
         userId: decodedToken.id,
       },
     });
     return notes;
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
