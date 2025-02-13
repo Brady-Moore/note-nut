@@ -78,7 +78,7 @@
           name="note"
           id="note"
           class="text-zinc-100 bg-transparent w-full my-3 font-playfair focus:outline-none resize-none flex-grow"
-          @input="updateNote"></textarea>
+          @input="debouncedFn"></textarea>
 
         <p class="text-zinc-100 my-3 font-playfair">
           {{ selectedNote.text }}
@@ -95,6 +95,10 @@ const selectedNote = ref({});
 definePageMeta({
   middleware: ["auth"],
 });
+
+const debouncedFn = useDebounceFn(async () => {
+  await updateNote();
+}, 1000);
 
 async function updateNote() {
   try {

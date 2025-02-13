@@ -30,6 +30,5 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ["@prisma/nuxt"],
-  prisma: { autoGenerate: true },
+  modules: ["@prisma/nuxt", "@vueuse/nuxt"],
 });
