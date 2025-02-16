@@ -96,11 +96,12 @@
               selectedNote.text = updatedNote;
             }
           "></textarea>
-
-        <p class="text-zinc-100 my-3 font-playfair">
-          {{ selectedNote.text }}
-        </p>
       </div>
+      <button
+        class="text-zinc-300 hover:text-white text-sm font-bold absolute right-3 bottom-3 p-3"
+        @click="logout">
+        Log Out
+      </button>
     </div>
   </div>
 </template>
@@ -113,6 +114,12 @@ const textarea = ref(null);
 definePageMeta({
   middleware: ["auth"],
 });
+
+function logout() {
+  const token = useCookie("NoteNutJWT");
+  token.value = null;
+  navigateTo("/");
+}
 
 async function createNote() {
   try {
