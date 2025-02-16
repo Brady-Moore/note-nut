@@ -11,13 +11,20 @@
             v-for="note in todaysNotes"
             class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
             :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
-            @click="selectedNote = note">
+            @click="
+              () => {
+                selectedNote = note;
+                updatedNote = note.text;
+              }
+            ">
             <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
             <div class="leading-none truncate text-zinc-400">
-              <span class="text-xs text-white mr-4">{{
-                new Date(note.updatedAt).toDateString() === new Date().toDateString() ? "Today" : new Date(note.updatedAt).toLocaleDateString()
-              }}</span>
-              <span class="text-xs text-zinc-400">... {{ note.text.substring(50, 90) }}</span>
+              <span class="text-xs text-white mr-4">{{ new Date(note.updatedAt).toLocaleDateString() }}</span>
+              <span
+                v-if="note.text.length > 50"
+                class="text-xs text-zinc-400"
+                >... {{ note.text.substring(50, 90) }}</span
+              >
             </div>
           </div>
         </div>
@@ -66,7 +73,11 @@
     <!-- Notes Container -->
     <div class="w-full flex flex-col">
       <div class="flex justify-between w-full items-start p-8">
-        <button class="inline-flex items-center text-xs text-zinc-300 hover:text-white font-bold space-x-2"><span>Icon</span><span>New Note</span></button>
+        <button
+          class="inline-flex items-center text-xs text-zinc-300 hover:text-white font-bold space-x-2"
+          @click="createNote">
+          <span>Icon</span><span>New Note</span>
+        </button>
         <button>
           <span class="text-zinc-300 hover:text-white">Trash Icon</span>
         </button>
@@ -74,11 +85,17 @@
       <div class="max-w-[450px] mx-auto w-full flex-grow">
         <p class="text-zinc-300 font-playfair">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
         <textarea
+          ref="textarea"
           v-model="updatedNote"
           name="note"
           id="note"
           class="text-zinc-100 bg-transparent w-full my-3 font-playfair focus:outline-none resize-none flex-grow"
-          @input="debouncedFn"></textarea>
+          @input="
+            () => {
+              debouncedFn();
+              selectedNote.text = updatedNote;
+            }
+          "></textarea>
 
         <p class="text-zinc-100 my-3 font-playfair">
           {{ selectedNote.text }}
@@ -92,9 +109,25 @@
 const updatedNote = ref("");
 const notes = ref([]);
 const selectedNote = ref({});
+const textarea = ref(null);
 definePageMeta({
   middleware: ["auth"],
 });
+
+async function createNote() {
+  try {
+    const newNote = await $fetch(`/api/notes`, {
+      method: "POST",
+    });
+
+    notes.value.unshift(newNote);
+    selectedNote.value = notes.value[0];
+    updatedNote.value = "";
+    textarea.value.focus();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const debouncedFn = useDebounceFn(async () => {
   await updateNote();
@@ -142,10 +175,14 @@ const pastNotes = computed(() => {
 onMounted(async () => {
   notes.value = await $fetch("/api/notes");
 
+  notes.value.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
   if (notes.value.length > 0) {
     selectedNote.value = notes.value[0];
 
     updatedNote.value = selectedNote.value.text;
+
+    textarea.value.focus();
   }
 });
 </script>
