@@ -1,22 +1,19 @@
 <template>
   <div class="flex bg-zinc-900 h-screen">
     <!-- Side Bar -->
-    <div class="bg-black w-[330px] p-7">
-      <Logo />
-      <!-- Today -->
+    <div class="bg-black w-[330px] p-7 flex flex-col overflow-scroll">
       <div>
+        <Logo />
+      </div>
+      <!-- Today -->
+      <div class="flex-grow">
         <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
         <div class="pl-2 space-y-2">
           <div
             v-for="note in todaysNotes"
             class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
             :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
-            @click="
-              () => {
-                selectedNote = note;
-                updatedNote = note.text;
-              }
-            ">
+            @click="setNote(note)">
             <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
             <div class="leading-none truncate text-zinc-400">
               <span class="text-xs text-white mr-4">{{ new Date(note.updatedAt).toLocaleDateString() }}</span>
@@ -38,13 +35,17 @@
             v-for="note in yesterdaysNotes"
             class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
             :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
-            @click="selectedNote = note">
+            @click="setNote(note)">
             <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
             <div class="leading-none truncate text-zinc-400">
               <span class="text-xs text-white mr-4">{{
                 new Date(note.updatedAt).toDateString() === new Date().toDateString() ? "Today" : new Date(note.updatedAt).toLocaleDateString()
               }}</span>
-              <span class="text-xs text-zinc-400">... {{ note.text.substring(50, 90) }}</span>
+              <span
+                v-if="note.text.length > 50"
+                class="text-xs text-zinc-400"
+                >... {{ note.text.substring(50, 90) }}</span
+              >
             </div>
           </div>
         </div>
@@ -58,13 +59,17 @@
             v-for="note in pastNotes"
             class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
             :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
-            @click="selectedNote = note">
+            @click="setNote(note)">
             <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
             <div class="leading-none truncate text-zinc-400">
               <span class="text-xs text-white mr-4">{{
                 new Date(note.updatedAt).toDateString() === new Date().toDateString() ? "Today" : new Date(note.updatedAt).toLocaleDateString()
               }}</span>
-              <span class="text-xs text-zinc-400">... {{ note.text.substring(50, 90) }}</span>
+              <span
+                v-if="note.text.length > 50"
+                class="text-xs text-zinc-400"
+                >... {{ note.text.substring(50, 90) }}</span
+              >
             </div>
           </div>
         </div>
@@ -119,6 +124,11 @@ function logout() {
   const token = useCookie("NoteNutJWT");
   token.value = null;
   navigateTo("/");
+}
+
+function setNote(note) {
+  selectedNote.value = note;
+  updatedNote.value = note.text;
 }
 
 async function deleteNote() {
