@@ -78,7 +78,7 @@
           @click="createNote">
           <span>Icon</span><span>New Note</span>
         </button>
-        <button>
+        <button @click="deleteNote">
           <span class="text-zinc-300 hover:text-white">Trash Icon</span>
         </button>
       </div>
@@ -119,6 +119,28 @@ function logout() {
   const token = useCookie("NoteNutJWT");
   token.value = null;
   navigateTo("/");
+}
+
+async function deleteNote() {
+  const { isConfirmed } = await Swal.fire({
+    title: "Deletion Confirmation",
+    text: "Are you sure you'd like to delete this note permanently? You will not be able to recover it after this.",
+    icon: "warning",
+    confirmButtonText: "Delete Permanently",
+    showCancelButton: true,
+  });
+
+  if (isConfirmed) {
+    await $fetch(`/api/notes/${selectedNote.value.id}`, {
+      method: "DELETE",
+    });
+
+    const index = notes.value.findIndex((note) => {
+      return note.id === selectedNote.value.id;
+    });
+    console.log(index);
+    notes.value.splice(index, 1);
+  }
 }
 
 async function createNote() {
