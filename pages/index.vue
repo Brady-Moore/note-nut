@@ -208,10 +208,12 @@ onMounted(async () => {
 
   if (notes.value.length > 0) {
     selectedNote.value = notes.value[0];
-
-    updatedNote.value = selectedNote.value.text;
-
-    textarea.value.focus();
+  } else {
+    createNote();
+    selectedNote.value = notes.value[0];
   }
+  updatedNote.value = selectedNote.value.text;
+
+  textarea.value.focus();
 });
 </script>
