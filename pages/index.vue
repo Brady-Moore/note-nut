@@ -11,8 +11,9 @@
         <div class="pl-2 space-y-2">
           <div
             v-for="note in todaysNotes"
-            class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
-            :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
+            :key="note.id"
+            class="p-2 rounded-lg cursor-pointer"
+            :class="{ 'bg-yellow-500': selectedNote && note.id === selectedNote.id, 'hover:bg-yellow-500/20': !selectedNote || note.id !== selectedNote.id }"
             @click="setNote(note)">
             <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
             <div class="leading-none truncate text-zinc-400">
@@ -33,8 +34,9 @@
         <div class="pl-2 space-y-2">
           <div
             v-for="note in yesterdaysNotes"
-            class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
-            :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
+            :key="note.id"
+            class="p-2 rounded-lg cursor-pointer"
+            :class="{ 'bg-yellow-500': selectedNote && note.id === selectedNote.id, 'hover:bg-yellow-500/20': !selectedNote || note.id !== selectedNote.id }"
             @click="setNote(note)">
             <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
             <div class="leading-none truncate text-zinc-400">
@@ -57,8 +59,9 @@
         <div class="pl-2 space-y-2">
           <div
             v-for="note in pastNotes"
-            class="p-2 bg-yellow-500 rounded-lg cursor-pointer"
-            :class="{ 'bg-yellow-500': note.id === selectedNote.id, 'hover:bg-yellow-500/20': note.id !== selectedNote.id }"
+            :key="note.id"
+            class="p-2 rounded-lg cursor-pointer"
+            :class="{ 'bg-yellow-500': selectedNote && note.id === selectedNote.id, 'hover:bg-yellow-500/20': !selectedNote || note.id !== selectedNote.id }"
             @click="setNote(note)">
             <h3 class="text-sm font-bold text-white truncate">{{ note.text.substring(0, 40) }}</h3>
             <div class="leading-none truncate text-zinc-400">
@@ -88,7 +91,16 @@
         </button>
       </div>
       <div class="max-w-[450px] mx-auto w-full flex-grow">
-        <p class="text-zinc-300 font-playfair">{{ new Date(selectedNote.updatedAt).toLocaleDateString() }}</p>
+        <p
+          v-if="selectedNote"
+          class="text-zinc-300 font-playfair">
+          {{ new Date(selectedNote.updatedAt).toLocaleDateString() }}
+        </p>
+        <p
+          v-else
+          class="text-zinc-400 italic">
+          No note selected
+        </p>
         <textarea
           ref="textarea"
           v-model="updatedNote"
@@ -112,9 +124,12 @@
 </template>
 
 <script setup>
+import Swal from "sweetalert2";
+import { nextTick } from "vue";
+
 const updatedNote = ref("");
 const notes = ref([]);
-const selectedNote = ref({});
+const selectedNote = ref(null);
 const textarea = ref(null);
 definePageMeta({
   middleware: ["auth"],
@@ -123,7 +138,7 @@ definePageMeta({
 function logout() {
   const token = useCookie("NoteNutJWT");
   token.value = null;
-  navigateTo("/");
+  navigateTo("/login");
 }
 
 function setNote(note) {
@@ -148,8 +163,16 @@ async function deleteNote() {
     const index = notes.value.findIndex((note) => {
       return note.id === selectedNote.value.id;
     });
-    console.log(index);
-    notes.value.splice(index, 1);
+
+    if (index !== -1) {
+      const deletedSelected = notes.value[index].id === selectedNote.value?.id;
+      notes.value.splice(index, 1);
+
+      if (deletedSelected) {
+        selectedNote.value = notes.value[0] ?? null;
+        updatedNote.value = selectedNote.value ? selectedNote.value.text : "";
+      }
+    }
   }
 }
 
@@ -169,6 +192,8 @@ async function createNote() {
 }
 
 const debouncedFn = useDebounceFn(async () => {
+  if (!selectedNote.value) return;
+  if (updatedNote.value === selectedNote.value.text) return;
   await updateNote();
 }, 1000);
 
@@ -219,11 +244,15 @@ onMounted(async () => {
   if (notes.value.length > 0) {
     selectedNote.value = notes.value[0];
   } else {
-    createNote();
+    await createNote();
     selectedNote.value = notes.value[0];
   }
-  updatedNote.value = selectedNote.value.text;
 
-  textarea.value.focus();
+  if (selectedNote.value) {
+    updatedNote.value = selectedNote.value.text;
+  }
+
+  await nextTick();
+  textarea.value?.focus();
 });
 </script>
