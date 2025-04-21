@@ -1,31 +1,21 @@
 import jwt from "jsonwebtoken";
+import { prisma } from "../utils/prisma.js";
 
 export default defineEventHandler(async (event) => {
   try {
-    const cookies = parseCookies(event);
-    const token = cookies.NoteNutJWT;
+    const token = parseCookies(event).NoteNutJWT;
+    if (!token) throw createError({ statusCode: 401, statusMessage: "Not authorized to create note" });
 
-    if (!token) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: "Not authorized to create note",
-      });
-    }
-
-    const decodedToken = await jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const newNote = await prisma.note.create({
-      data: {
-        text: "",
-        userId: decodedToken.id,
-      },
+      data: { text: "", userId: decoded.id },
     });
 
+    setResponseStatus(event, 201);
     return newNote;
-  } catch (err) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Could not verify token",
-    });
+  } catch (error) {
+    if (error.statusCode) throw error;
+    throw createError({ statusCode: 500, statusMessage: "Could not create note" });
   }
 });
