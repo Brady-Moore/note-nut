@@ -1,5 +1,8 @@
-<!-- TODO: Make Logo Image/Title -->
-
 <template>
-  <h1>Note Nut</h1>
+  <div class="flex justify-center items-center">
+    <img
+      src="/logo.png"
+      alt="NoteNut Logo"
+      class="object-cover rounded-lg w-60 h-30 overflow-hidden" />
+  </div>
 </template>
