@@ -1,75 +1,127 @@
-# Nuxt Minimal Starter
+# 🥜 NoteNut
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+NoteNut is a secure, minimalist note-taking app built with **Nuxt 3**, **Prisma**, and **MySQL**.  
+Each user has their own private notes — organized by **Today**, **Yesterday**, and **Past** — all stored safely in a relational database.
 
-## Setup
+Authentication is handled via **JWT cookies**, and passwords are hashed with **bcrypt** for maximum security.
 
-Make sure to install dependencies:
+![NoteNut Logo](./public/logo.png)
+
+---
+
+## ✨ Features
+
+- 🔐 **User Authentication**
+
+  - Register and log in with email and password.
+  - Secure password hashing (bcrypt) and JWT cookie-based auth.
+  - 🔒 Authentication Flow
+
+    - User registers or logs in → server validates credentials.
+
+    - A signed JWT is created and stored in the browser as a cookie.
+
+    - Protected routes (like /) use auth.js middleware to verify JWT before rendering.
+
+    - On logout, the cookie is cleared and user is redirected to /login.
+
+- 📝 **Personal Notes**
+
+  - Create, edit, and delete notes in real time.
+  - Auto-saving using a debounced update system (saves 1 s after typing stops).
+
+- 🗓️ **Smart Organization**
+
+  - Notes are grouped automatically by:
+    - **Today**
+    - **Yesterday**
+    - **Past**
+
+- 🎨 **Modern UI**
+
+  - Built with **Tailwind CSS** and custom Playfair/Inter typography.
+  - Smooth UX with **SweetAlert2** for modals and confirmations.
+
+- 🧠 **Prisma ORM**
+  - Full relational schema for `User` and `Note` models.
+  - MySQL 8 running in **Docker** for easy local development.
+
+---
+
+## 🧰 Tech Stack
+
+| Layer                    | Technology                                                                                                    |
+| :----------------------- | :------------------------------------------------------------------------------------------------------------ |
+| **Frontend / Framework** | [Nuxt 3](https://nuxt.com/)                                                                                   |
+| **ORM / Database**       | [Prisma](https://www.prisma.io/) + MySQL8                                                                     |
+| **Auth**                 | [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) + [bcryptjs](https://github.com/dcodeIO/bcrypt.js) |
+| **Styling**              | [Tailwind CSS](https://tailwindcss.com/)                                                                      |
+| **Alerts**               | [SweetAlert2](https://sweetalert2.github.io/)                                                                 |
+| **Runtime**              | Node.js 20 + Nitro server                                                                                     |
+| **Container**            | Docker for MySQL                                                                                              |
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1️⃣ Clone the repository
 
 ```bash
-# npm
+git clone https://github.com/<your-username>/note-nut.git
+cd note-nut
+```
+
+### 2️⃣ Install dependencies
+
+```bash
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
+### 3️⃣ Set up your environment variables
 
-Start the development server on `http://localhost:3000`:
+Create a .env file at the root of your project:
+
+```env
+DATABASE_URL="mysql://root:root@localhost:3306/notenut"
+SHADOW_DATABASE_URL="mysql://root:root@localhost:3306/notenut_shadow"
+JWT_SECRET="your-secret-key"
+```
+
+### 4️⃣ Start your MySQL container
 
 ```bash
-# npm
+docker run --name mysql8 \
+  -e MYSQL_ROOT_PASSWORD=root \
+  -e MYSQL_DATABASE=notenut \
+  -p 3306:3306 \
+  -d mysql:8
+```
+
+### 5️⃣ Initialize the database
+
+```bash
+npx prisma migrate dev
+```
+
+Then open Prisma Studio to inspect your data:
+
+```bash
+npx prisma studio
+```
+
+### 6️⃣ Run the app
+
+```bash
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+Navigate to:
+👉 http://localhost:3000
 
-Build the application for production:
+You’ll see the login page — register a new account and start writing notes!
 
-```bash
-# npm
-npm run build
+### 🧑‍💻 Author
 
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Brady Moore
+Frontend / Fullstack Developer
+🇯🇵 Tokyo, Japan
