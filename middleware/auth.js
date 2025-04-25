@@ -5,12 +5,18 @@ export default defineNuxtRouteMiddleware(async (event) => {
   const token = useCookie("NoteNutJWT");
 
   if (!token.value) {
-    return navigateTo("/register");
+    return navigateTo("/login");
   }
+
   try {
     await $verifyJwtToken(token.value, process.env.JWT_SECRET);
   } catch (error) {
-    console.log(error);
-    return navigateTo("/register");
+    console.error("JWT verification failed:", error.message);
+
+    if (error.name === "TokenExpiredError") {
+      console.warn("Token expired — redirecting to login");
+    }
+
+    return navigateTo("/login");
   }
 });
