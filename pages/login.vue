@@ -3,13 +3,15 @@
     <!-- Side Bar -->
     <div class="bg-black w-[500px] p-10 flex flex-col justify-center">
       <Logo />
-      <h1 class="text-white font-bold text-lg mt-7">Log in</h1>
-      <p class="text-zinc-300 text-sm">
-        Don't have an account yet?<nuxt-link
+      <h1 class="text-white font-bold text-lg mt-8">Log in to your account</h1>
+      <p class="text-zinc-300 text-sm mt-1">
+        Don't have an account?
+        <nuxt-link
           to="/register"
-          class="font-bold text-yellow-500 underline"
-          >Sign up</nuxt-link
-        >for an account
+          class="font-bold text-yellow-500 underline">
+          Sign up
+        </nuxt-link>
+        for one.
       </p>
       <!-- Login Form -->
       <form @submit.prevent="submit">
@@ -22,10 +24,11 @@
           <input
             v-model="email"
             type="email"
+            autocomplete="email"
             class="block w-full bg-gray-700 border border-zinc-400 rounded text-white text-sm px-3 py-2 placeholder:text-zinc-400"
             placeholder="email@example.com" />
         </div>
-        <div>
+        <div class="mt-6">
           <label
             for="password"
             class="text-zinc-300 text-sm block mb-1"
@@ -34,12 +37,15 @@
           <input
             v-model="password"
             type="password"
+            autocomplete="password"
             class="block w-full bg-gray-700 border border-zinc-400 rounded text-white text-sm px-3 py-2 placeholder:text-zinc-400"
             placeholder="***********" />
         </div>
-        <!-- Sign Up Button -->
+        <!-- Log in Button -->
         <div>
-          <button class="w-full mt-4 bg-yellow-500 rounded-full px-3 py-2 text-sm font-bold">Log In</button>
+          <button class="w-full mt-4 bg-yellow-500 rounded-full px-3 py-2 text-sm font-bold flex justify-center items-center space-x-2">
+            <span>Log in</span><ArrowRight />
+          </button>
         </div>
       </form>
     </div>
@@ -50,10 +56,21 @@
 
 <script setup>
 import Swal from "sweetalert2";
+import ArrowRight from "~/components/ArrowRight.vue";
 const email = ref("");
 const password = ref("");
 
 async function submit() {
+  if (!email.value || !password.value) {
+    Swal.fire({
+      title: "Missing fields",
+      text: "Please enter both email and password.",
+      icon: "warning",
+      confirmButtonText: "OK",
+    });
+    return;
+  }
+
   try {
     const response = await $fetch("/api/login", {
       method: "POST",
@@ -65,16 +82,15 @@ async function submit() {
 
     const { isConfirmed } = await Swal.fire({
       title: "Success!",
-      text: "Logged in!",
+      text: "Logged in successfully.",
       icon: "success",
-      confirmButtonText: "OK",
+      confirmButtonText: "Close",
     });
-
     if (isConfirmed) {
       navigateTo("/");
     }
   } catch (error) {
-    console.log("ERROR:");
+    console.error("Login error:", error);
     console.log(error.response?._data?.message);
     Swal.fire({
       title: "Error!",

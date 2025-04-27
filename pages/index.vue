@@ -109,8 +109,9 @@
           class="text-zinc-100 bg-transparent w-full my-3 font-playfair focus:outline-none resize-none flex-grow"
           @input="
             () => {
-              debouncedFn();
+              if (!selectedNote) return;
               selectedNote.text = updatedNote;
+              debouncedFn();
             }
           "></textarea>
       </div>
@@ -201,10 +202,16 @@ async function updateNote() {
   try {
     await $fetch(`/api/notes/${selectedNote.value.id}`, {
       method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: {
         updatedNote: updatedNote.value,
       },
     });
+
+    selectedNote.value.text = updatedNote.text;
+    selectedNote.value.updatedAt = updatedNote.updatedAt;
   } catch (error) {
     console.log(error);
   }

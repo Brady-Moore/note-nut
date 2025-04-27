@@ -4,8 +4,7 @@ import { prisma } from "../../utils/prisma.js";
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
-    const id = Number(getRouterParam(event, "id"));
-    if (Number.isNaN(id)) throw createError({ statusCode: 400, statusMessage: "Invalid note id" });
+    const id = await getRouterParam(event, "id");
 
     const token = parseCookies(event).NoteNutJWT;
     if (!token) throw createError({ statusCode: 401, statusMessage: "Not authorized to update" });
@@ -19,14 +18,16 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 403, statusMessage: "No permission to update note" });
     }
 
-    const text = typeof body.updatedNote === "string" ? body.updatedNote : body.text;
-    if (typeof text !== "string") {
-      throw createError({ statusCode: 400, statusMessage: "Invalid payload" });
+    const { updatedNote, text } = body;
+    const content = typeof updatedNote === "string" ? updatedNote : text;
+
+    if (!content || typeof content !== "string") {
+      throw createError({ statusCode: 400, statusMessage: "Invalid note content" });
     }
 
     const updated = await prisma.note.update({
       where: { id },
-      data: { text },
+      data: { text: content },
       select: { id: true, text: true, updatedAt: true },
     });
 
