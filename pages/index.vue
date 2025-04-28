@@ -132,6 +132,7 @@ const updatedNote = ref("");
 const notes = ref([]);
 const selectedNote = ref(null);
 const textarea = ref(null);
+const lastSavedText = ref("");
 definePageMeta({
   middleware: ["auth"],
 });
@@ -145,6 +146,7 @@ function logout() {
 function setNote(note) {
   selectedNote.value = note;
   updatedNote.value = note.text;
+  lastSavedText.value = note.text;
 }
 
 async function deleteNote() {
@@ -194,7 +196,7 @@ async function createNote() {
 
 const debouncedFn = useDebounceFn(async () => {
   if (!selectedNote.value) return;
-  if (updatedNote.value === selectedNote.value.text) return;
+  if (updatedNote.value === lastSavedText.value) return;
   await updateNote();
 }, 1000);
 
