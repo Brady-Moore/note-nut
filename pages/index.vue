@@ -7,7 +7,7 @@
       </div>
       <!-- Today -->
       <div class="flex-grow">
-        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Today</p>
+        <p class="text-xs font-bold text-zinc-300 mt-7 mb-3">Today</p>
         <div class="pl-2 space-y-2">
           <div
             v-for="note in todaysNotes"
@@ -29,8 +29,8 @@
       </div>
 
       <!-- Yesterday -->
-      <div>
-        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Yesterday</p>
+      <div class="flex-grow">
+        <p class="text-xs font-bold text-zinc-300 mt-7 mb-3">Yesterday</p>
         <div class="pl-2 space-y-2">
           <div
             v-for="note in yesterdaysNotes"
@@ -54,8 +54,8 @@
       </div>
 
       <!-- Past Yesterday -->
-      <div>
-        <p class="text-xs font-bold text-zinc-300 mt-10 mb-3">Past</p>
+      <div class="flex-grow">
+        <p class="text-xs font-bold text-zinc-300 mt-7 mb-3">Past</p>
         <div class="pl-2 space-y-2">
           <div
             v-for="note in pastNotes"
@@ -82,15 +82,18 @@
     <div class="w-full flex flex-col">
       <div class="flex justify-between w-full items-start p-8">
         <button
-          class="inline-flex items-center text-xs text-zinc-300 hover:text-white font-bold space-x-2"
+          class="inline-flex items-center text-s text-[#C2C2C5] hover:text-white font-bold space-x-2"
           @click="createNote">
-          <span>Icon</span><span>New Note</span>
+          <PencilIcon />
+          <span>Create Note</span>
         </button>
-        <button @click="deleteNote">
-          <span class="text-zinc-300 hover:text-white">Trash Icon</span>
+        <button>
+          <TrashIcon
+            class="text-[#6D6D73] hover:text-white text-s"
+            @click="deleteNote" />
         </button>
       </div>
-      <div class="max-w-[450px] mx-auto w-full flex-grow">
+      <div class="max-w-[437px] mx-auto w-full flex-grow flex flex-col">
         <p
           v-if="selectedNote"
           class="text-zinc-300 font-playfair">
@@ -211,9 +214,6 @@ async function updateNote() {
         updatedNote: updatedNote.value,
       },
     });
-
-    selectedNote.value.text = updatedNote.text;
-    selectedNote.value.updatedAt = updatedNote.updatedAt;
   } catch (error) {
     console.log(error);
   }
