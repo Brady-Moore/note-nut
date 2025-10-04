@@ -1,11 +1,11 @@
-# 🥜 NoteNut
+# <img src="./public/logo.png" alt="NoteNut Logo" width="150" />
 
 NoteNut is a secure, minimalist note-taking app built with **Nuxt 3**, **Prisma**, and **MySQL**.  
 Each user has their own private notes — organized by **Today**, **Yesterday**, and **Past** — all stored safely in a relational database.
 
 Authentication is handled via **JWT cookies**, and passwords are hashed with **bcrypt** for maximum security.
 
-![NoteNut Logo](./public/logo.png)
+
 
 ---
 
