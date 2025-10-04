@@ -40,4 +40,7 @@ export default defineNuxtConfig({
   },
 
   modules: ["@prisma/nuxt", "@vueuse/nuxt"],
+  nitro: {
+    preset: "netlify",
+  },
 });
