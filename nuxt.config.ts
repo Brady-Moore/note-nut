@@ -43,10 +43,5 @@ export default defineNuxtConfig({
   nitro: {
     preset: "netlify",
     externals: { inline: [".prisma/client"] },
-    output: {
-      dir: ".netlify",
-      publicDir: ".netlify/publish",
-      serverDir: ".netlify/functions",
-    },
   },
 });
