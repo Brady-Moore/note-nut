@@ -39,7 +39,7 @@ export default defineNuxtConfig({
     plugins: { tailwindcss: {}, autoprefixer: {} },
   },
 
-  modules: ["@prisma/nuxt", "@vueuse/nuxt"],
+  modules: ["@vueuse/nuxt"],
   nitro: {
     preset: "netlify",
     externals: {
