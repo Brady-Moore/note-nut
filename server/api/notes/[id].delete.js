@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { prisma } from "../../utils/prisma.js";
+import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
   try {
