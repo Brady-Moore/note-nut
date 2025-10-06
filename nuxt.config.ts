@@ -42,8 +42,11 @@ export default defineNuxtConfig({
   modules: ["@vueuse/nuxt"],
   nitro: {
     preset: "netlify",
-    externals: {
-      inline: [".prisma/client"],
+    externals: { inline: [".prisma/client"] },
+    output: {
+      dir: ".netlify",
+      publicDir: ".netlify/publish",
+      serverDir: ".netlify/functions",
     },
   },
 });
