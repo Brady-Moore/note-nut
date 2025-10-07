@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import validator from "validator";
 import jwt from "jsonwebtoken";
-import prisma from "~/lib/prisma";
+import prisma from "~/lib/prisma.ts";
 
 export default defineEventHandler(async (event) => {
   try {
