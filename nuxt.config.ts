@@ -4,6 +4,7 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "en",
       },
+      title: "NoteNut",
       link: [
         {
           rel: "preconnect",
